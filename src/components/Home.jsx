@@ -7,13 +7,15 @@ import MarkerPosition from "./MarkerPosition";
 
 const Home = () => {
   const [address, setAddress] = useState(null);
-  const [ipaddress, setIpAddress] = useState("");
+  const [ipAddress, setIpAddress] = useState("");
   const apiKey = "at_E0urN4SPTxzOLY94SysxImIVZaZeh";
+  const checkIpAddress =
+    /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi;
+  const checkDomain =
+    /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+/;
 
   useEffect(() => {
-    Axios.get(
-      `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=8.8.8.8`
-    )
+    Axios.get(`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}`)
       .then((res) => {
         console.log(res);
         setAddress(res.data);
@@ -23,12 +25,42 @@ const Home = () => {
       });
   }, []);
 
+  const getEnteredAddress = () => {
+    Axios.get(
+      `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&${
+        checkIpAddress.test(ipAddress)
+          ? `ipAddress=${ipAddress}`
+          : checkDomain.test(ipAddress)
+          ? `domain=${ipAddress}`
+          : ""
+      }`
+    )
+      .then((res) => {
+        console.log(res);
+        setAddress(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    getEnteredAddress();
+    setIpAddress("");
+  };
+
   return (
     <div className="home-main">
       <div>
         <h2>IP Address Tracker</h2>
-        <form action="#">
-          <input type="text" name="ipaddress" />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="ipaddress"
+            value={ipAddress}
+            onChange={(e) => setIpAddress(e.target.value)}
+          />
           <button>
             <img src={arrow} />
           </button>
