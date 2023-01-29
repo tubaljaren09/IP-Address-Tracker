@@ -6,13 +6,13 @@ import arrow from "../images/icon-arrow.svg";
 import MarkerPosition from "./MarkerPosition";
 
 const Home = () => {
-  const [address, setAddress] = useState(null);
-  const [ipAddress, setIpAddress] = useState("");
-  const apiKey = "at_E0urN4SPTxzOLY94SysxImIVZaZeh";
+  const [address, setAddress] = useState(null); // state that saves current address or location
+  const [ipAddress, setIpAddress] = useState(""); // state that saves user input
+  const apiKey = "at_E0urN4SPTxzOLY94SysxImIVZaZeh"; // api key from api geo
   const checkIpAddress =
-    /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi;
+    /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi; // regex to check if ip address entered by the user is correct
   const checkDomain =
-    /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+/;
+    /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+/; // regex to check if user entered a domain instead of ip address
 
   useEffect(() => {
     Axios.get(`https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}`)
@@ -23,7 +23,7 @@ const Home = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, []); // useEffect with promise and axios to fetch data from api then console log it and setAddress to save data in address state. catch error
 
   const getEnteredAddress = () => {
     Axios.get(
@@ -42,13 +42,13 @@ const Home = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }; // A function that gets the user input. Axios with promise to fetch data and use regex to check whether the user entered an ip address or domain then console log it and setAddress to save data in address state. catch error
 
   const handleSubmit = (e) => {
     e.preventDefault();
     getEnteredAddress();
     setIpAddress("");
-  };
+  }; // A function that submit the form with user input
 
   return (
     <div className="home-main">
@@ -59,7 +59,7 @@ const Home = () => {
             type="text"
             name="ipaddress"
             value={ipAddress}
-            onChange={(e) => setIpAddress(e.target.value)}
+            onChange={(e) => setIpAddress(e.target.value)} // A function that setting the value of ipaddress state equals to input field
           />
           <button>
             <img src={arrow} />

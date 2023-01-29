@@ -18,7 +18,7 @@ export default function MarkerPosition({ address }) {
     map.flyTo(position, 13, {
       animate: true,
     });
-  }, [map, position]);
+  }, [map, position]); // useEffect and flyTo method from useMap that makes the map and marker animation when locating position
 
   return (
     <Marker
